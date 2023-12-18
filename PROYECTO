@@ -1,0 +1,349 @@
+library(shiny)
+library(readxl)
+library(stringr)
+#library(magrittr)
+library(tidyverse)
+library(dplyr)
+# Cargar los datos desde el archivo Excel
+ruta_archivo <- "C:/Users/Lenovo/Desktop/TERMINAL II/LISTA_CLIENTES.xlsx"
+datos <- read_excel(ruta_archivo)
+clavewords<-colnames(datos)##  VECTOR COLUMNAS
+# Definir la interfaz de usuario (UI)
+ui <- fluidPage(
+  sidebarLayout(
+    sidebarPanel(
+      textInput("pregunta", label = "Haz una pregunta:", placeholder = "Escribe tu pregunta aquí..."),
+      actionButton("enviar", "Enviar Pregunta")
+    ),
+    mainPanel(
+      verbatimTextOutput("respuesta")
+    )
+  )
+)
+
+# Definir la lógica del servidor
+server <- function(input, output) {
+  observeEvent(input$enviar, {
+    if (is.null(input$pregunta) || input$pregunta == "") {
+      # Mostrar un mensaje de error o simplemente no hacer nada
+      print("Por favor, ingrese una pregunta antes de enviar.")
+      return(NULL)
+    }
+    #Directorios de palabras
+    directorio_id <- c("id","it","ud","is","od","di","idd","iid","iidd","iddi","ido","ida","idos","idas","iendo")
+    directorio_nombres <- c("nombres","nomvres","nmbres","nomvres","nombrs","nombre","nombr","nomvres","nombro","nombra","nombra","nombremos","nombres","nombran")
+    directorio_nacimiento <- c("nasimiento","nacimiento","nacimynto","nacimient","nacimiiento","nacimiemto","nacimientto","nace","naces","nace","nacemos","nacen","nacer")
+    directorio_direccion <- c("direccion","direccíon","direcciom","dirción","dreción","direccon","direccin","dirección","dierccion","dirreccion","dirrecciom")
+    directorio_localidad <- c("localida","locadidad","localdidad","localidadd","localizo","localiza","localizas","localizamos","localizan")
+    directorio_telefono <- c("telefono","telófono","telofono","teléfomo","telefomo","teléphono","telephono","tléfono","tlefono","teléfon","telefon","teléfonoo","telefonoo")
+    directorio_correo <- c("correos","coreo","corre","corro","cporreo","coprreo","correoo","correro","ccorreo","correos","corres","corren", "correos" )
+    directorio_clientes <- c("clientes", "cliente","clentes","clienttes","cliientess","klientes","kliente","cliantes","clienta","clientamos","clientan")
+    #todos_los_directorios <- c(directorio_id, directorio_nombres, directorio_nacimiento, directorio_direccion, directorio_localidad, directorio_telefono, directorio_correo, directorio_clientes)
+    todos_los_directorios <- c("id","it","ud","is","od","di","idd","iid","iidd","iddi","ido","ida","idos","idas","iendo","nombres","nomvres","nmbres","nomvres","nombrs","nombre","nombr","nomvres","nombro","nombra","nombra","nombremos","nombres","nombran","nasimiento","nacimiento","nacimynto","nacimient","nacimiiento","nacimiemto","nacimientto","nace","naces","nace","nacemos","nacen","nacer","direccion","direccíon","direcciom","dirción","dreción","direccon","direccin","dirección","dierccion","dirreccion","dirrecciom","localida","locadidad","localdidad","localidadd","localizo","localiza","localizas","localizamos","localizan","telefono","telófono","telofono","teléfomo","telefomo","teléphono","telephono","tléfono","tlefono","teléfon","telefon","teléfonoo","telefonoo","coreo","corre","corro","cporreo","coprreo","correoo","correro","ccorreo","correos","corres","corren","cliente","clentes","clienttes","cliientess","klientes","kliente","cliantes","clienta","clientamos","clientan")
+    #Vector con las variables de cuántas y cuántos 
+    directorio_cuanta <- c( "cuantos", "cuantas", "cuántos", "cuántas", "cuantoz", "cuantaz", "cúantos", "cúantas", "algunos", "algunas", "numerosos", "numerosas")
+    directorio_quienes<-c( "muestrame","quienes", "cuales", "quien", "kien", "kuales", "kualez","kienes","kienez")
+    directorio_TyClA<-c("A","a", "a?", "A?")
+    directorio_TyClB<-c("B","b")
+    directorio_TyClC<-c("C","c")
+    directorio_TyClD<-c("D","d")
+    directorio_TyClE<-c("E","e")
+    # Crear la lógica para generar una respuesta basada en la base de datos
+    pregunta_usuario <- input$pregunta
+    print(pregunta_usuario)
+    pregunta_usuario2<- tolower(pregunta_usuario)
+    print(pregunta_usuario2)
+    palabras_frase <- unlist(strsplit(pregunta_usuario2, "\\s+"))
+    print(palabras_frase)
+    PU<-toupper(pregunta_usuario)
+    #vector_palabras <- strsplit(pregunta_usuario2, " ")[[1]]
+    #print(vector_palabras)
+    ###contar cuantas palabras tiene lo que ingresa el usuario
+    cantidad_palabras <- length(palabras_frase)
+    print(cantidad_palabras)
+    respuesta <- "Respuesta no encontrada"
+    #cantidad_palabras <- length(vector_palabras)
+    #print(cantidad_palabras)
+    i=0
+    if(cantidad_palabras==1)
+    {
+      for(elemento in todos_los_directorios) ##COMPARA CADA ELEMENTO DEL DIRECTORIO CON LA PALABRA INGRESADA
+      {
+        if(elemento==palabras_frase){
+          print("entra")
+          #otro_vector<-elemento
+          print(elemento)
+          i=1
+        }
+        else
+        {
+          print("jaja que tontos")
+        }
+      }
+      #Cambiar la palabra ingresada por el usuario por una palabra útil
+      if(i==1)
+      {
+        for(elemento in directorio_id){
+          if(elemento==palabras_frase)
+            palabras_frase="id"}
+        for(elemento in directorio_nombres){
+          if(elemento==palabras_frase)
+            palabras_frase="nombres"}
+        for(elemento in directorio_nacimiento){
+          if(elemento==palabras_frase)
+            palabras_frase="nacimiento"}
+        for(elemento in directorio_direccion){
+          if(elemento==palabras_frase)
+            palabras_frase="dirección"}
+        for(elemento in directorio_localidad){
+          if(elemento==palabras_frase)
+            palabras_frase="localidad"}
+        for(elemento in directorio_telefono){
+          if(elemento==palabras_frase)
+            palabras_frase="teléfono"}
+        for(elemento in directorio_correo){
+          if(elemento==palabras_frase)
+            palabras_frase="correo"}
+        for(elemento in directorio_clientes){
+          if(elemento==palabras_frase)
+            palabras_frase="clientes"}
+        print("si entró")
+      }
+      palabras_limpias <- palabras_frase[palabras_frase %in% clavewords]
+      print(palabras_limpias)
+      frase_limpia <- paste(palabras_limpias, collapse = " ")
+      print(frase_limpia)
+      print("ver aquí")
+      if(frase_limpia %in% colnames(datos))
+      {
+        flag=0
+      }
+      else
+      {
+        flag=1
+      }
+      if (flag==0) 
+      {
+        respuesta <- datos[[frase_limpia]]
+        print(frase_limpia)##quitar
+        flag=1
+      }
+      else if(flag==1)
+      {
+        cont=0
+        for(elemento in datos$id)
+        {
+          if(elemento==PU)
+          {
+            filtrado_1var<- datos %>% filter(id==PU)
+            respuesta<-filtrado_1var[["nombres"]]
+            break
+            #view(filtrado_1var)
+          }
+          else
+          {
+            cont=cont+1
+            #print(cont)
+          }
+        }
+        for(elemento in datos$correo)
+        {
+          if(elemento==pregunta_usuario2)
+          {
+            filtrado_1var<- datos %>% filter(correo==pregunta_usuario2)
+            respuesta<-filtrado_1var[["nombres"]]
+            #break
+            #view(filtrado_1var)
+          }
+          else
+          {
+            cont=cont+1
+            #print(cont)
+          }
+        }
+        for(elemento in datos$clientes)
+        {
+          if(elemento==PU)
+          {
+            filtrado_1var<- datos %>% filter(clientes==PU)
+            respuesta<-filtrado_1var[["nombres"]]
+            break
+            #view(filtrado_1var)
+          }
+          else
+          {
+            cont=cont+1
+            #print(cont)
+          }
+        }
+      }
+      else 
+      {
+        print("No se encontró una columna que coincida con la pregunta.")
+        print(frase_limpia)##quitar
+      }
+    }
+    
+    else if (cantidad_palabras>1)
+      {
+        palabras_limpias <- character()  # Inicializamos un vector vacío para almacenar las palabras limpias
+        palabras_busqueda <- character() #Vector para guardar las palabras de búsqueda
+        palabras_condicion <- character() #vector para guaradar la condición
+        palabras_quienes <- character()
+        palabras_letter<- character()
+      
+        for (elemento in palabras_frase) 
+        {
+          if (elemento %in% directorio_cuanta) 
+          {
+            palabras_busqueda <- c(palabras_busqueda, "cuantas")
+          }
+           #if (elemento %in% )
+          }
+        
+        for (elemento in palabras_frase) 
+        {
+         # if (elemento %in% directorio_cuanta) 
+         # {
+        #    palabras_busqueda <- c(palabras_busqueda, "cuantas")
+        #  }
+          if (elemento %in% directorio_id) 
+          {
+            palabras_limpias <- c(palabras_limpias, "id")
+          }
+          else if (elemento %in% directorio_nombres) 
+          {
+            palabras_limpias <- c(palabras_limpias, "nombres")
+          } 
+          else if (elemento %in% directorio_nacimiento) 
+          {
+            palabras_limpias <- c(palabras_limpias, "nacimiento")
+          } 
+          else if (elemento %in% directorio_direccion) 
+          {
+            palabras_limpias <- c(palabras_limpias, "dirección")
+          }
+          else if (elemento %in% directorio_localidad) 
+          {
+            palabras_limpias <- c(palabras_limpias, "localidad")
+          }
+          else if (elemento %in% directorio_telefono)
+          {
+            palabras_limpias <- c(palabras_limpias, "teléfono")
+          } 
+          else if (elemento %in% directorio_correo) 
+          {
+            palabras_limpias <- c(palabras_limpias, "correos")
+          } 
+          else if (elemento %in% directorio_clientes) 
+          {
+            palabras_limpias <- c(palabras_limpias, "clientes")
+          }
+          else if (elemento %in% directorio_quienes) 
+          {
+            palabras_quienes <- c(palabras_quienes, "quienes")
+          } 
+          else if(elemento %in% directorio_TyClA)
+          {
+            palabras_letter <- c(palabras_letter, "A") 
+          } 
+          else if(elemento %in% directorio_TyClB)
+          {
+            palabras_letter <- c(palabras_letter, "B") 
+          }
+          else if(elemento %in% directorio_TyClC)
+          {
+            palabras_letter <- c(palabras_letter, "C") 
+          }
+          else if(elemento %in% directorio_TyClD)
+          {
+            palabras_letter <- c(palabras_letter, "D") 
+          }
+          else if(elemento %in% directorio_TyClE)
+          {
+            palabras_letter <- c(palabras_letter, "E") 
+          }
+      }
+
+     if(palabras_quienes=="quienes" &&  palabras_limpias=="clientes" &&(palabras_letter=="A" || palabras_letter=="B" || palabras_letter=="C" || palabras_letter=="D" || palabras_letter=="E"))
+     {  
+        if(palabras_quienes=="quienes" &&  palabras_limpias=="clientes" && palabras_letter=="A")
+        {
+          filtrado_1var<- datos %>% filter(clientes=="A")
+          frase_limpia="nombres"
+        }
+        else if(palabras_quienes=="quienes" &&  palabras_limpias=="clientes" && palabras_letter=="B")
+        {
+          filtrado_1var<- datos %>% filter(clientes=="B")
+          frase_limpia="nombres"
+        }
+        else if(palabras_quienes=="quienes" &&  palabras_limpias=="clientes" && palabras_letter=="C")
+        {
+          filtrado_1var<- datos %>% filter(clientes=="C")
+          frase_limpia="nombres"
+        }
+        else if(palabras_quienes=="quienes" &&  palabras_limpias=="clientes" && palabras_letter=="D")
+        {
+          filtrado_1var<- datos %>% filter(clientes=="D")
+          frase_limpia="nombres"
+        }
+        else if(palabras_quienes=="quienes" &&  palabras_limpias=="clientes" && palabras_letter=="E")
+        {
+          filtrado_1var<- datos %>% filter(clientes=="E")
+          frase_limpia="nombres"
+        }
+        
+        if (frase_limpia %in% colnames(datos)) 
+        {
+          respuesta <- filtrado_1var[[frase_limpia]]
+          print(frase_limpia)##quitar
+        }
+        else
+        {
+          print("No se encontró una columna que coincida con la pregunta.")
+        }
+         
+     }
+ #     else if(palabras_quienes=="muestrame" &&  palabras_limpias=="correos" &&(palabras_letter=="A" || palabras_letter=="B" || palabras_letter=="C" || palabras_letter=="D" || palabras_letter=="E"))
+  #      {  
+ #         if(palabras_quienes=="muestrame" &&  palabras_limpias=="correos" && palabras_letter=="A")
+#          {
+ #           filtrado_1var<- datos %>% filter(clientes=="A")
+ #           frase_limpia="correo"
+ #         }
+#        
+ #         if (frase_limpia %in% colnames(datos)) 
+  #        {
+  #          respuesta <- filtrado_1var[[frase_limpia]]
+  #          print(frase_limpia)##quitar
+  #        }
+  #        else
+   #       {
+  #          print("No se encontró una columna que coincida con la pregunta.")
+  #        }
+          
+   #     }
+      
+    }
+  #  else
+  #  {
+      # Ejemplo: si la pregunta coincide con una columna en los datos, devuelve esa columna
+  #    if (frase_limpia %in% colnames(datos)) 
+  #    {
+  #      respuesta <- datos[[frase_limpia]]
+  #      print(frase_limpia)##quitar
+  #    }
+  #    else 
+  #    {
+  #      print("No se encontró una columna que coincida con la pregunta.")
+  #      print(frase_limpia)##quitar
+  #    }
+  #    respuesta<-"Respuesta no encontrada"
+  #  }
+    print(paste("Pregunta ingresada:", frase_limpia))
+    output$respuesta <- renderPrint({
+      respuesta
+    })
+  })
+}
+shinyApp(ui = ui, server = server)
